@@ -91,9 +91,10 @@ def shortest_path(source, target):
 
     If no possible path, returns None.
     """
+
     frontier = QueueFrontier()
-    start = Node(state=person_id_for_name(source, parent=None, action=None))
-    frontier.add((start))
+    start = Node(state=person_id_for_name(source))
+    frontier.add((start.state()))
     path = []
     while True:
         if frontier.empty():
@@ -103,7 +104,6 @@ def shortest_path(source, target):
             return path
         path.append(neighbors_for_person(node))
         frontier.add(path[-1])
-
 
 
 def person_id_for_name(name):
