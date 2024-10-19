@@ -1,7 +1,7 @@
 """
 Tic Tac Toe Player
 """
-
+import copy
 import math
 
 X = "X"
@@ -40,7 +40,7 @@ def actions(board):
     actions = set()
     for i in range(len(board)):
         for j in range(len(board[i])):
-            if board[i][j] is None:
+            if board[i][j] is EMPTY:
                 actions.add((i,j))
     return actions
 
@@ -49,7 +49,8 @@ def result(board, action):
     """
     Returns the board that results from making move (i, j) on the board.
     """
-    row, column = action
+    board = copy.deepcopy(board)
+    row, column, = action
     if action not in actions(board):
         raise Exception("Invalid Move")
 
@@ -106,4 +107,34 @@ def minimax(board):
     """
     Returns the optimal action for the current player on the board.
     """
-    raise NotImplementedError
+    act_value = {}
+    if player(board) == X:
+        for action in actions(board):
+            act_value[action] = min_value(result(board,action))
+        return max(act_value)
+            
+
+
+    if player(board) == O:
+        for action in actions(board):
+            act_value[action] = max_value(result(board, action))
+        return min(act_value)
+
+
+def min_value(s):
+    if terminal(s):
+        return utility(s)
+    v = math.inf
+    for action in actions(s):
+        v = min(v, max_value(result(s, action)))
+    return v
+
+
+def max_value(s):
+    if terminal(s):
+        return utility(s)
+    v = -math.inf
+    for action in actions(s):
+        v = max(v, min_value(result(s, action)))
+    return v
+
