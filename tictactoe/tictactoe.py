@@ -83,7 +83,7 @@ def terminal(board):
     count = 0
     if winner(board) is not None:
         return True
-    if actions(board) is None:
+    if len(actions(board)) == 0:
         return True
     else:
         return False
@@ -107,18 +107,25 @@ def minimax(board):
     """
     Returns the optimal action for the current player on the board.
     """
-    act_value = {}
+    ivalue = -math.inf
     if player(board) == X:
         for action in actions(board):
-            act_value[action] = min_value(result(board,action))
-        return max(act_value)
+            value = min_value(result(board,action))
+            if value > ivalue:
+                ivalue = value
+                act = action
+        return act
             
 
 
     if player(board) == O:
+        ivalue = math.inf
         for action in actions(board):
-            act_value[action] = max_value(result(board, action))
-        return min(act_value)
+            value = max_value(result(board, action))
+            if value < ivalue:
+                ivalue = value
+                act = action
+        return act
 
 
 def min_value(s):
