@@ -12,47 +12,71 @@ CKnave = Symbol("C is a Knave")
 # Puzzle 0
 # A says "I am both a knight and a knave."
 knowledge0 = And(
-   Or(AKnight, AKnave),
-   Not(And(AKnave, AKnight)),
-   Not(Or(BKnight, BKnave)),
-   Not(Or(CKnave, CKnight)),
-   Implication(AKnight, Or(AKnight, AKnave))
+    Or(AKnave, AKnight),
+    Not(And(AKnave, AKnight))
 )
 
-knowledge0.add(And(AKnave, AKnight))
-knowledge0.formula()
+knowledge0.add(And(
+    Implication(AKnave, Not(And(AKnight, AKnave))),
+    Implication(AKnight, And(AKnave, AKnight))
+))
 
 # Puzzle 1
 # A says "We are both knaves."
 # B says nothing.
 knowledge1 = And(
-   Or(AKnight, AKnave),
-   Not(And(AKnight, AKnave)),
-   Biconditional(AKnight, AKnight),
-   Implication(AKnave, Not(Or(AKnight,AKnave))),
-   Not(Or(CKnave, CKnight)),
+    Or(AKnave, AKnight),
+    Not(And(AKnave, AKnight)),
+    Or(BKnave, BKnight),
+    Not(And(BKnight, BKnave))
 )
 
-knowledge1.add(Implication(AKnave, And(AKnave, BKnave)))
-
-
+knowledge1.add(And(
+    Implication(AKnave, Not(And(AKnave, BKnave))),
+    Implication(AKnight, And(AKnave, AKnave))
+))
 
 
 # Puzzle 2
 # A says "We are the same kind."
 # B says "We are of different kinds."
 knowledge2 = And(
-    # TODO
+    Or(AKnave, AKnight),
+    Not(And(AKnave, AKnight)),
+    Or(BKnave, BKnight),
+    Not(And(BKnight, BKnave))
 )
 
+knowledge2.add(And(
+    Implication(AKnave, Not(Or(And(AKnave, BKnave), And(AKnight, BKnight)))),
+    Implication(AKnight, Or(And(AKnight, BKnight), And(AKnave, BKnave))),
+    Implication(BKnave, Not(Or(And(AKnave, BKnight), And(AKnight, BKnave)))),
+    Implication(BKnight, Or(And(AKnight, BKnave), And(AKnave, BKnight)))
+))
 # Puzzle 3
 # A says either "I am a knight." or "I am a knave.", but you don't know which.
 # B says "A said 'I am a knave'."
 # B says "C is a knave."
 # C says "A is a knight."
 knowledge3 = And(
-    # TODO
+    Or(AKnave, AKnight),
+    Not(And(AKnave, AKnight)),
+    Or(BKnave, BKnight),
+    Not(And(BKnight, BKnave)),
+    Or(CKnave, CKnight),
+    Not(And(CKnight, CKnave))
 )
+
+knowledge3.add(And(
+    Implication(AKnight, Or(AKnight, AKnave)),
+    Implication(AKnave, Not(Or(AKnight, AKnave))),
+    Implication(BKnight, And(Implication(AKnight, BKnight), Implication(AKnave, Not(BKnight)))),
+    Implication(BKnave, Not(And(Implication(AKnight, BKnight), Implication(AKnave, Not(BKnight))))),
+    Implication(BKnight, CKnave),
+    Implication(BKnave, Not(CKnave)),
+    Implication(CKnight, AKnight),
+    Implication(CKnave, Not(AKnight))
+))
 
 
 def main():
