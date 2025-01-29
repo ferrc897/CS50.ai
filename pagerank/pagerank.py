@@ -58,13 +58,11 @@ def transition_model(corpus, page, damping_factor):
     a link at random chosen from all pages in the corpus.
     """
     prob_distribution = dict()
-
-    for pages, links in corpus:
+    for pages in corpus:
         prob = (1 - damping_factor) / len(corpus)
         prob_distribution.update({pages: prob})
         if pages in corpus[page]:
-            prob_distribution.update({pages: prob + (damping_factor / len(corpus))})
-    print(prob_distribution)
+            prob_distribution.update({pages: prob + (damping_factor / len(corpus[page]))})
     return prob_distribution
 
 
@@ -78,7 +76,21 @@ def sample_pagerank(corpus, damping_factor, n):
     their estimated PageRank value (a value between 0 and 1). All
     PageRank values should sum to 1.
     """
-    raise NotImplementedError
+   
+    PageRank = dict()
+    for pages in corpus:
+        PageRank.update({pages: 0})
+
+    page = random.choice(list(corpus.keys()))
+    PageRank.update({page: PageRank[page] + 1 / n})
+    
+    for _ in range(n-1):
+        probability = transition_model(corpus, page, damping_factor)
+        page = random.choices(list(probability.keys()), list(probability.values()))[0]
+        PageRank.update({page: PageRank[page] + 1 / n})
+    
+    return PageRank
+
 
 
 def iterate_pagerank(corpus, damping_factor):
@@ -90,7 +102,24 @@ def iterate_pagerank(corpus, damping_factor):
     their estimated PageRank value (a value between 0 and 1). All
     PageRank values should sum to 1.
     """
-    raise NotImplementedError
+    PageRank = dict()
+    print(corpus)
+    for page in corpus:
+        PageRank.update({page: 1 / len(corpus)})
+    
+    for _ in range(20):
+        for p in corpus:
+            pr = (1 - damping_factor) / len(corpus)
+
+            sum = 0
+            for i in corpus:
+                if p in corpus[i]:
+                    sum += PageRank[i] / len(corpus[i])
+
+            pr = pr + (damping_factor * sum)
+            PageRank.update({p: pr})
+    
+    return PageRank
 
 
 if __name__ == "__main__":
