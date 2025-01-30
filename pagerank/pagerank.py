@@ -107,7 +107,8 @@ def iterate_pagerank(corpus, damping_factor):
     for page in corpus:
         PageRank.update({page: 1 / len(corpus)})
     
-    for _ in range(20):
+    for _ in range(10):
+        new_rank = dict()
         for p in corpus:
             pr = (1 - damping_factor) / len(corpus)
 
@@ -116,8 +117,9 @@ def iterate_pagerank(corpus, damping_factor):
                 if p in corpus[i]:
                     sum += PageRank[i] / len(corpus[i])
 
-            pr = pr + (damping_factor * sum)
-            PageRank.update({p: pr})
+            pr = pr + damping_factor * sum
+            new_rank.update({p: pr})
+        PageRank = new_rank
     
     return PageRank
 
