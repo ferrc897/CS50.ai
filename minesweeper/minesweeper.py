@@ -229,10 +229,11 @@ class MinesweeperAI():
 
         for sentence1 in self.knowledge:
             for sentence2 in self.knowledge:
-                if sentence1.cells.issubset(sentence2) and len(sentence1.cells) != len(sentence2.cells):
+                if sentence1.cells.issubset(sentence2.cells) and len(sentence1.cells) != len(sentence2.cells):
                      cells = set()
-                     for cell in sentence2.cells not in sentence1.cells:
-                         cells.add(cell)
+                     for cell in sentence2.cells:
+                        if cell not in sentence1.cells:
+                            cells.add(cell)
                      self.knowledge.append(Sentence(cells, sentence2.count - sentence2.count))
         for sentence in self.knowledge:
             print(f"{sentence.cells} = {sentence.count}")

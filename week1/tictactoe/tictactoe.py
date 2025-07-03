@@ -80,7 +80,6 @@ def terminal(board):
     """
     Returns True if game is over, False otherwise.
     """
-    count = 0
     if winner(board) is not None:
         return True
     if len(actions(board)) == 0:
@@ -95,7 +94,7 @@ def utility(board):
     """
     result = winner(board)
 
-    if result == X:
+    if result == X and not terminal(board):
         return 1
     elif result == O:
         return -1
@@ -108,7 +107,7 @@ def minimax(board):
     Returns the optimal action for the current player on the board.
     """
     ivalue = -math.inf
-    if player(board) == X:
+    if player(board) == X and not terminal(board):
         for action in actions(board):
             value = min_value(result(board,action))
             if value > ivalue:
